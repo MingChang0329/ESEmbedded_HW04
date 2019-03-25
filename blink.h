@@ -8,5 +8,7 @@
 
 void blink(unsigned int led);
 void blink_count(unsigned int led, unsigned int count);
+void User_init();
+void READ_BUTTON();
 
 #endif

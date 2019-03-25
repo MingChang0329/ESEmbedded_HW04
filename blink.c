@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "reg.h"
+#include "blink.h"
 
 /**
  * 
@@ -78,4 +79,45 @@ void blink_count(unsigned int led, unsigned int count)
 		for (i = 0; i < 100000; i++)
 			;
 	}
+
 }
+/**
+ * 
+ * User init
+ * 
+ */
+void User_init()
+{
+        SET_BIT(RCC_BASE + RCC_AHB1ENR_OFFSET, GPIO_EN_BIT(GPIO_PORTA));
+
+        //MODER led pin = 01 => General purpose output mode
+        CLEAR_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_MODER_OFFSET, MODERy_1_BIT(0));
+        CLEAR_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_MODER_OFFSET, MODERy_0_BIT(0));
+
+        //OT led pin = 0 => Output push-pull
+        CLEAR_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_OTYPER_OFFSET, OTy_BIT(0));
+
+        //OSPEEDR led pin = 00 => Low speed
+        CLEAR_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_OSPEEDR_OFFSET, OSPEEDRy_1_BIT(0));
+        CLEAR_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_OSPEEDR_OFFSET, OSPEEDRy_0_BIT(0));
+
+        //PUPDR led pin = 00 => No pull-up, pull-down
+        SET_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_PUPDR_OFFSET, PUPDRy_1_BIT(0));
+        CLEAR_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_PUPDR_OFFSET, PUPDRy_0_BIT(0));
+}
+void READ_BUTTON()
+{
+	User_init();
+
+
+        while(1)
+        {
+                if(READ_BIT(GPIO_BASE(GPIO_PORTA) + GPIOx_IDR_OFFSET, IDRy_BIT(0)) != 0)
+                {
+                        blink(LED_BLUE);
+                }
+
+        }
+
+}
+

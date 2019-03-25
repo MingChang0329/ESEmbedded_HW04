@@ -2,5 +2,5 @@
 
 int main(void)
 {
-	blink(LED_BLUE);
+	READ_BUTTON();
 }
